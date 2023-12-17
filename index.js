@@ -9,6 +9,7 @@ import checkAuth from "./utils/checkAuth.js";
 import handleValidationErrors from "./utils/handleValidationErrors.js";
 
 import { UserController, PostController } from "./controllers/index.js";    
+import cors from 'cors';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -21,7 +22,7 @@ mongoose
     .catch((err) => console.log('DB error', err));
 
 const app = express();
-
+app.use(cors());
 const storage = multer.diskStorage({
     destination: (_,__,cb) => {
         cb(null, 'uploads');
