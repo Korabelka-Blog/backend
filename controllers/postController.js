@@ -3,17 +3,28 @@ import Post from "../models/Post.js";
 import PostModel from "../models/Post.js";
 
 export const getAll = async (req, res) => {
-    try{
+    try {
+        const page = req.query.page || 1;
+        const limit = req.query.limit || 10;
+
+        const startIndex = (page - 1) * limit;
+        const endIndex = page * limit;
+
         const posts = await PostModel.find().populate('user').exec();
 
-        res.json(posts);
-    } catch (err) {
-        console.log(err);
+        const sorted = posts.slice(startIndex, endIndex);
+
+        res.json({
+            length: posts.length,
+            posts: sorted,
+        });
+    } catch (error) {
+        console.log(error);
         res.status(500).json({
-            message: 'Статьи получить не удалось',
+            message: 'Не удалось получить статьи',
         });
     }
-}
+};
 
 export const getOne = async (req, res) => {
     try{
